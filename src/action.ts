@@ -12,6 +12,18 @@ export async function createUser(value: typeof usersTable.$inferInsert) {
     return newRow[0].id;
 }
 
+export async function getUserByEmail(email: string) {
+    const rows = await db.select().from(usersTable).where(eq(usersTable.email, email));
+
+    return rows?.[0] || null;
+}
+
+export async function getUserById(id: number) {
+    const rows = await db.select().from(usersTable).where(eq(usersTable.id, id));
+
+    return rows?.[0] || null;
+}
+
 export async function updateUser(id: number, value: typeof usersTable.$inferSelect) {
     await db.update(usersTable).set(value).where(eq(usersTable.id, id));
 

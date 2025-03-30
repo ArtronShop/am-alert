@@ -2,10 +2,9 @@ import { integer, pgTable, varchar, json, timestamp, text } from "drizzle-orm/pg
 
 export const usersTable = pgTable("users", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    username: varchar({ length: 30 }).notNull(),
+    email: varchar({ length: 255 }).notNull().unique(),
     password: varchar({ length: 72 }).notNull(),
     name: varchar({ length: 255 }),
-    email: varchar({ length: 255 }).notNull().unique(),
 });
 
 export const roomsTable = pgTable("rooms", {
