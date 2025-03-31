@@ -14,6 +14,7 @@
         ArrowLeftOutline,
         BellActiveOutline,
         CloseOutline,
+        DownloadSolid,
     } from "flowbite-svelte-icons";
 
     import cookieCutter from "cookie-cutter";
@@ -28,7 +29,7 @@
         {
             message: "Test 1",
             assets: {
-                image: "https://f.lnwfile.com/_/f/_raw/iv/1n/yd.png"
+                image: "https://f.lnwfile.com/_/f/_raw/iv/1n/yd.png",
             },
             createAt: new Date(),
         },
@@ -48,6 +49,8 @@
         cookieCutter.set("auth", "");
         userInfo = null;
     };
+
+    const handleClickDownloadNotificationLog = () => {};
 </script>
 
 <title>การแจ้งเตือนของ {roomInfo?.name || ""} - Am Alert</title>
@@ -55,10 +58,11 @@
 <div class="m-auto w-80">
     <Navbar class="mb-5 rounded-b-lg">
         <Button
-            class="border-0 p-0 hover:bg-white text-gray-500 hover:text-gray-700"
+            class="border-0 p-0 hover:bg-white text-gray-500 hover:text-gray-700 focus:ring-0"
             outline
+            href="/"
         >
-            <ArrowLeftOutline class="w-8 h-8 mr-2" />
+            <ArrowLeftOutline class="w-8 h-8" />
         </Button>
         <NavBrand href="/">
             <img src="" class="me-3 h-6 sm:h-9" alt="Flowbite Logo" />
@@ -87,21 +91,37 @@
         </Button>
     </div>
     <p class="text-sm text-gray-500 mb-1">ประวัติแจ้งเตือน</p>
-    <div class="bg-white rounded-xl p-4 mb-5">
+    <div class="bg-white rounded-xl p-4 mb-2">
         {#each notificationList as item}
             <div class="mb-4">
                 <div class="text-sm text-gray-500 mb-1">
                     {new Date(item.createAt || 0).toLocaleString()}
                 </div>
-                <div class="bg-gray-100 text-gray-800 rounded-xl inline-block overflow-hidden">
+                <div
+                    class="bg-gray-100 text-gray-800 rounded-xl inline-block overflow-hidden"
+                >
                     <p class="text-base px-3 pt-2 pb-1">{item.message}</p>
                     {#if item?.assets?.image}
                         <a href={item.assets.image} target="_blank">
-                            <img class="max-w-full" src={item.assets.image} alt={item.message} />
+                            <img
+                                class="max-w-full"
+                                src={item.assets.image}
+                                alt={item.message}
+                            />
                         </a>
                     {/if}
                 </div>
             </div>
         {/each}
+    </div>
+    <div class="flex justify-end mb-5">
+        <Button
+            class="border-none hover:bg-primary-50 hover:text-primary-800"
+            size="sm"
+            outline
+            on:click={handleClickDownloadNotificationLog}
+        >
+            <DownloadSolid class="w-5 h-5 mr-1" />ดาวน์โหลด
+        </Button>
     </div>
 </div>

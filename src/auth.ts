@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import bcrypt from "bcrypt";
-import { getUserByEmail } from "./action";
+import { createRoom, createUser, getUserByEmail } from "./action";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET: string = process.env.JWT_SECRET!;
@@ -14,6 +14,14 @@ async function hashPassword(password: string) {
 async function verifyPassword(plainPassword: string, hashedPassword: string) {
     const isMatch = await bcrypt.compare(plainPassword, hashedPassword);
     return isMatch;
+}
+
+export const signUp = async (email: string, password: string, name: string) => {
+    const passwordHash = await hashPassword(password);
+    const userId = await createUser({ email, password: passwordHash, name });
+    const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: "1y" });
+
+    return token;
 }
 
 export const signIn = async (email: string, password: string) => {
