@@ -47,12 +47,16 @@
         </div>
         <Dropdown placement="bottom" triggeredBy="#avatar-menu">
             {#if userInfo}
+                {#if currentUrl.endsWith("/")}
                 <DropdownItem>สร้างห้องแจ้งเตือนใหม่</DropdownItem>
+                {:else}
+                <DropdownItem href={currentUrl + "/edit"}>แก้ไขข้อมูลห้อง</DropdownItem>
+                {/if}
                 <DropdownItem>สำหรับนักพัฒนา</DropdownItem>
                 <DropdownDivider />
-                <DropdownItem href={"/logout?go=" + encodeURI(currentUrl)}>ออกจากระบบ</DropdownItem>
+                <DropdownItem href={"/logout?go=" + encodeURIComponent(currentUrl)}>ออกจากระบบ</DropdownItem>
             {:else}
-                <DropdownItem href="/login">เข้าสู่ระบบ</DropdownItem>
+                <DropdownItem href={"/login?go=" + encodeURIComponent(currentUrl)}>เข้าสู่ระบบ</DropdownItem>
             {/if}
         </Dropdown>
     </Navbar>

@@ -3,7 +3,7 @@ import type { Actions } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const actions = {
-    login: async ({ cookies, request }) => {
+    login: async ({ cookies, request, url }) => {
         const data = await request.formData();
         const email = (data.get('email') || "") as string;
         const password = (data.get('password') || "") as string;
@@ -24,7 +24,9 @@ export const actions = {
             expires,
         });
 
-        redirect(303, "/");
+        const goUrl = url.searchParams.get("go") || "/";
+
+        redirect(303, goUrl);
 
         return { success: true };
     },
