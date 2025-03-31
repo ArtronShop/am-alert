@@ -89,6 +89,12 @@ export async function createNotification(value: typeof notificationTable.$inferI
     return newRow[0].id;
 }
 
+export async function getNotificationsByRoomId(roomId: number) {
+    const rows = await db.select().from(notificationTable).where(eq(notificationTable.roomId, roomId));
+
+    return rows;
+}
+
 export async function deleteNotification(id: number) {
     await db.delete(notificationTable).where(eq(notificationTable.id, id));
 
