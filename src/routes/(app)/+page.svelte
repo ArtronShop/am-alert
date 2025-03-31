@@ -29,7 +29,7 @@
 
     import type { PageProps } from './$types';
 
-	let { data }: PageProps = $props();
+    let { data }: PageProps = $props();
     const { userInfo } = data;
 
     let icons = [
@@ -50,24 +50,6 @@
 <title>การแจ้งเตือนของฉัน - Am Alert</title>
 
 <div class="m-auto w-80">
-    <Navbar class="mb-5 rounded-b-lg">
-        <NavBrand href="/">
-            <img src="" class="me-3 h-6 sm:h-9" alt="Flowbite Logo" />
-        </NavBrand>
-        <div class="flex items-center md:order-2">
-            <Avatar id="avatar-menu" src="" />
-        </div>
-        <Dropdown placement="bottom" triggeredBy="#avatar-menu">
-            {#if userInfo}
-                <DropdownItem>สำหรับนักพัฒนา</DropdownItem>
-                <DropdownDivider />
-                <DropdownItem href={"/logout?go=/"}>ออกจากระบบ</DropdownItem>
-            {:else}
-                <DropdownItem href="/login">เข้าสู่ระบบ</DropdownItem>
-            {/if}
-        </Dropdown>
-    </Navbar>
-
     <p class="text-sm text-gray-500 mb-1">การแจ้งเตือนของฉัน</p>
     <Listgroup active class="mb-5">
         {#each icons as item, index}

@@ -1,8 +1,8 @@
 import type { PageServerLoad } from './$types';
-import { verifyToken } from "../auth";
-import { getUserById } from "../action";
-import { usersTable } from '../db/schema';
-import type { UserInfoProps } from '../types';
+import { verifyToken } from "../../auth";
+import { getUserById } from "../../action";
+import { usersTable } from '../../db/schema';
+import type { UserInfoProps } from '../../types';
 
 export const load: PageServerLoad = async ({ cookies }) => {
 	let userInfo: UserInfoProps | null = null;

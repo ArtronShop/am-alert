@@ -30,7 +30,9 @@ export const signIn = async (email: string, password: string) => {
         return null;
     }
 
-    if (!verifyPassword(password, userInfo.password)) {
+    console.log(password, userInfo.password);
+
+    if (!await verifyPassword(password, userInfo.password)) {
         return null;
     }
 

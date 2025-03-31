@@ -20,7 +20,7 @@
     import type { PageProps } from "./$types";
 
     let { data }: PageProps = $props();
-    const { userInfo, roomInfo } = data;
+    const { roomInfo } = data;
 
     const notificationList = [
         {
@@ -46,32 +46,6 @@
 <title>การแจ้งเตือนของ {roomInfo?.name || ""} - Am Alert</title>
 
 <div class="m-auto w-80">
-    <Navbar class="mb-5 rounded-b-lg">
-        <Button
-            class="border-0 p-0 hover:bg-white text-gray-500 hover:text-gray-700 focus:ring-0"
-            outline
-            href="/"
-        >
-            <ArrowLeftOutline class="w-8 h-8" />
-        </Button>
-        <NavBrand href="/">
-            <img src="" class="me-3 h-6 sm:h-9" alt="Flowbite Logo" />
-        </NavBrand>
-        <div class="flex items-center md:order-2">
-            {{/* TODO: Fixed Dropdown not work */}}
-            <Avatar id="avatar-menu" src="" />
-        </div>
-        <Dropdown placement="bottom" triggeredBy="#avatar-menu">
-            {#if userInfo}
-                <DropdownItem>สำหรับนักพัฒนา</DropdownItem>
-                <DropdownDivider />
-                <DropdownItem href={"/logout?go=/room/" + roomInfo.id}>ออกจากระบบ</DropdownItem>
-            {:else}
-                <DropdownItem href="/login">เข้าสู่ระบบ</DropdownItem>
-            {/if}
-        </Dropdown>
-    </Navbar>
-
     <div class="flex flex-col justify-center items-center mb-5">
         <Avatar src={roomInfo?.cover || ""} size="lg" class="mb-2" />
         <p class="text-xl text-center mb-2">
