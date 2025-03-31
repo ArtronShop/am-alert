@@ -17,13 +17,10 @@
         DownloadSolid,
     } from "flowbite-svelte-icons";
 
-    import cookieCutter from "cookie-cutter";
-
     import type { PageProps } from "./$types";
-    import type { UserInfoProps } from "../../../types";
 
     let { data }: PageProps = $props();
-    const { roomInfo } = data;
+    const { userInfo, roomInfo } = data;
 
     const notificationList = [
         {
@@ -43,13 +40,6 @@
         },
     ];
 
-    let userInfo: UserInfoProps | null = $state(data.userInfo);
-
-    const handleLogout = () => {
-        cookieCutter.set("auth", "");
-        userInfo = null;
-    };
-
     const handleClickDownloadNotificationLog = () => {};
 </script>
 
@@ -68,13 +58,14 @@
             <img src="" class="me-3 h-6 sm:h-9" alt="Flowbite Logo" />
         </NavBrand>
         <div class="flex items-center md:order-2">
+            {{/* TODO: Fixed Dropdown not work */}}
             <Avatar id="avatar-menu" src="" />
         </div>
         <Dropdown placement="bottom" triggeredBy="#avatar-menu">
             {#if userInfo}
                 <DropdownItem>สำหรับนักพัฒนา</DropdownItem>
                 <DropdownDivider />
-                <DropdownItem on:click={handleLogout}>ออกจากระบบ</DropdownItem>
+                <DropdownItem href={"/logout?go=/room/" + roomInfo.id}>ออกจากระบบ</DropdownItem>
             {:else}
                 <DropdownItem href="/login">เข้าสู่ระบบ</DropdownItem>
             {/if}
