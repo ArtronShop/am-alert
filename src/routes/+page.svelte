@@ -27,12 +27,10 @@
         PlusOutline,
     } from "flowbite-svelte-icons";
 
-    import cookieCutter from "cookie-cutter";
-
     import type { PageProps } from './$types';
-    import type { UserInfoProps } from "../types";
 
 	let { data }: PageProps = $props();
+    const { userInfo } = data;
 
     let icons = [
         { id: 1, name: "ฟาร์มไก่ 1", icon: UserCircleSolid },
@@ -46,13 +44,6 @@
         const roomId = +(addRoomIdInput?.value || 0);
         alert(roomId);
         addRoomIdInput.value = "";
-    };
-
-    let userInfo: UserInfoProps | null = $state(data.userInfo);
-
-    const handleLogout = () => {
-        cookieCutter.set("auth", "");
-        userInfo = null;
     };
 </script>
 
@@ -70,7 +61,7 @@
             {#if userInfo}
                 <DropdownItem>สำหรับนักพัฒนา</DropdownItem>
                 <DropdownDivider />
-                <DropdownItem on:click={handleLogout}>ออกจากระบบ</DropdownItem>
+                <DropdownItem href={"/logout?go=/"}>ออกจากระบบ</DropdownItem>
             {:else}
                 <DropdownItem href="/login">เข้าสู่ระบบ</DropdownItem>
             {/if}
