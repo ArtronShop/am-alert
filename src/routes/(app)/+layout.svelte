@@ -45,11 +45,12 @@
         <div class="flex items-center md:order-2">
             <Avatar id="avatar-menu" src="" />
         </div>
-        <Dropdown placement="bottom" triggeredBy="#avatar-menu">
+        <Dropdown placement="bottom" triggeredBy="#avatar-menu" >
             {#if userInfo}
                 {#if currentUrl.endsWith("/")}
-                <DropdownItem>สร้างห้องแจ้งเตือนใหม่</DropdownItem>
-                {:else}
+                <DropdownItem href="/create-room">สร้างห้องแจ้งเตือนใหม่</DropdownItem>
+                {/if}
+                {#if currentUrl.indexOf("/room/") >= 0}
                 <DropdownItem href={currentUrl + "/edit"}>แก้ไขข้อมูลห้อง</DropdownItem>
                 {/if}
                 <DropdownItem>สำหรับนักพัฒนา</DropdownItem>
