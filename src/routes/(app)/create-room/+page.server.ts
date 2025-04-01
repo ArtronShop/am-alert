@@ -60,10 +60,10 @@ export const actions = {
 
             await fs.writeFile(filePath, buffer);
 
-            coverPath = path.join("/uploads", coverFile.name);
+            coverPath = "/uploads/" + coverFile.name;
         }
 
-        const token = jwt.sign({}, "RoomSecretKey");
+        const token = jwt.sign({ owner: userInfo.email }, "RoomSecretKey");
 
         const roomId = await createRoom({ 
             name,
