@@ -30,14 +30,7 @@
     import type { PageProps } from './$types';
 
     let { data }: PageProps = $props();
-    const { userInfo } = data;
-
-    let icons = [
-        { id: 1, name: "ฟาร์มไก่ 1", icon: UserCircleSolid },
-        { id: 2, name: "แปลงผัก 2", icon: AdjustmentsHorizontalSolid },
-        { id: 3, name: "Messages", icon: MessagesSolid },
-        { id: 4, name: "เทส ๆ 345", icon: DownloadSolid },
-    ];
+    const { userInfo, roomList } = data;
 
     const handleClickAddRoom = () => {
         const addRoomIdInput = document.querySelector("#add-room-id") as HTMLInputElement;
@@ -52,15 +45,15 @@
 <div class="m-auto w-80">
     <p class="text-sm text-gray-500 mb-1">การแจ้งเตือนของฉัน</p>
     <Listgroup active class="mb-5">
-        {#each icons as item, index}
+        {#each (roomList || []) as item}
             <ListgroupItem
-                class="focus:ring-0 flex flex-row align-middle"
+                class="focus:ring-0 flex flex-row items-center"
                 href={`/room/${item.id}`}
             >
-                <Avatar src=" " size="md" />
+                <Avatar src={item.cover || ""} size="md" />
                 <div class="flex flex-col ml-3">
-                    <p class="text-list-header">{item.name}</p>
-                    <p class="text-list-body">Line 2 OK !</p>
+                    <p class="text-lg text-gray-600">{item.name}</p>
+                    <p class="text-sm text-gray-400">sdsdsd</p>
                 </div>
             </ListgroupItem>
         {/each}
@@ -74,9 +67,7 @@
             placeholder="หมายเลขห้อง"
             class="grid-rows-1 mr-3"
         />
-        <Button on:click={handleClickAddRoom}
-            ><PlusOutline class="w-5 h-5" /></Button
-        >
+        <Button on:click={handleClickAddRoom}><PlusOutline class="w-5 h-5" /></Button>
     </div>
 
     <hr class="my-3 border-gray-300" />

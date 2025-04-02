@@ -8,6 +8,7 @@
         DropdownItem,
         DropdownHeader,
         DropdownDivider,
+        Input,
     } from "flowbite-svelte";
 
     import {
@@ -15,12 +16,16 @@
         BellActiveOutline,
         CloseOutline,
         DownloadSolid,
+        FileCopySolid,
+        FloppyDiskSolid,
+        TrashBinSolid,
     } from "flowbite-svelte-icons";
 
     import type { PageProps } from "./$types";
+    import { usersTable } from "../../../../db/schema";
 
     let { data }: PageProps = $props();
-    const { roomInfo } = data;
+    const { userInfo, roomInfo } = data;
 
     const notificationList = [
         {
@@ -89,4 +94,39 @@
             <DownloadSolid class="w-5 h-5 mr-1" />ดาวน์โหลด
         </Button>
     </div>
+    {#if userInfo?.id === roomInfo.owner}
+        <p class="text-sm text-gray-500 mb-1">Token</p>
+        <div class="flex mb-5">
+            <Input class="grow mr-2" value={roomInfo.token} readonly />
+            <Button
+                class="border-none p-2.5"
+                size="sm"
+                on:click={handleClickDownloadNotificationLog}
+            >
+                <FileCopySolid class="w-5 h-5" />
+            </Button>
+        </div>
+        <p class="text-sm text-gray-500 mb-1">แก้ไขชื่อห้อง</p>
+        <div class="flex mb-5">
+            <Input class="grow mr-2" placeholder="ชื่อห้องใหม่" />
+            <Button
+                class="border-none p-2.5"
+                size="sm"
+                on:click={handleClickDownloadNotificationLog}
+            >
+                <FloppyDiskSolid class="w-5 h-5" />
+            </Button>
+        </div>
+        <div class="flex justify-end mb-5">
+            <Button
+                class="border-none p-2.5"
+                size="sm"
+                on:click={handleClickDownloadNotificationLog}
+                color="red"
+                outline
+            >
+                <TrashBinSolid class="w-5 h-5" /> ลบห้องนี้
+            </Button>
+        </div>
+    {/if}
 </div>

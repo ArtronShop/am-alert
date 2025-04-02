@@ -61,15 +61,13 @@
             />
         </div>
         <div class="mb-3">
-            <label class="text-sm text-gray-500 mb-1" for="room-name"
-                >ชื่อห้อง</label
-            >
+            <label class="text-sm text-gray-500 mb-1" for="room-name">ชื่อห้อง</label>
             <Input type="text" id="room-name" name="room-name" class="w-full" required />
         </div>
         <div class="mb-5 flex justify-end">
-            <Button on:click={() => 1} type="submit"
-                ><FloppyDiskOutline class="w-5 h-5 mr-2" />สร้างห้อง</Button
-            >
+            <Button on:click={() => 1} type="submit">
+                <FloppyDiskOutline class="w-5 h-5 mr-2" />สร้างห้อง
+            </Button>
         </div>
     </form>
 </div>

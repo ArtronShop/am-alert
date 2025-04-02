@@ -54,7 +54,7 @@ export async function getRoomsById(roomId: number[]) {
 export async function getRoomsByOwner(owner: number) {
     const rows = await db.select().from(roomsTable).where(eq(roomsTable.owner, owner));
 
-    return rows?.[0] || null;
+    return rows;
 }
 
 export async function updateRoom(roomId: number, value: typeof roomsTable.$inferSelect) {
