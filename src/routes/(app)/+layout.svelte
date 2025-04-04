@@ -12,12 +12,14 @@
     } from "flowbite-svelte";
 
     import {
-        ArrowLeftOutline
+        ArrowLeftOutline,
+        DownloadOutline,
     } from "flowbite-svelte-icons";
 
     import type { LayoutProps } from './$types';
     import { page } from '$app/state';
     import type { UserInfoProps } from '../../types';
+    import { onMount } from 'svelte';
 
 	interface LayoutData {
 		userInfo: UserInfoProps;
@@ -26,6 +28,37 @@
 	let { data, children }: LayoutProps = $props();
 	const { userInfo } = data as LayoutData;
     const currentUrl = $derived(page.url.toString());
+
+    let installAppDialogShow = $state(false);
+    let deferredInstallPrompt = $state(null);
+
+    onMount(() => {
+        window.addEventListener("beforeinstallprompt", evt => {
+            // console.log("beforeinstallprompt event", evt);
+            deferredInstallPrompt = evt;
+
+            installAppDialogShow = true;
+        });
+
+        window.addEventListener("appinstalled", evt => {
+            console.log('App installed.', evt);
+            installAppDialogShow = false;
+        });
+    });
+
+    const handleClickInstallApp = async () => {
+        deferredInstallPrompt.prompt();
+
+        const { outcome } = await deferredInstallPrompt.userChoice;
+        if (outcome === 'accepted') {
+            console.log('User accepted the A2HS prompt', choice);
+            installAppDialogShow = false;
+        } else {
+            console.log('User dismissed the A2HS prompt', choice);
+        }
+
+        deferredInstallPrompt = null;
+    }
 </script>
 
 <div class="m-auto w-80">
@@ -61,6 +94,15 @@
             {/if}
         </Dropdown>
     </Navbar>
+</div>
+
+<div class="fixed bottom-3 w-80 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-2xl p-3 z-50">
+    <p class="text-sm mb-1">เพื่อประสบการณ์ที่ดีขึ้น ขอแนะนำให้ติดตั้งแอพนี้ลงในอุปกรณ์ของคุณ</p>
+    <div class="flex justify-end">
+        <Button size="sm" on:click={handleClickInstallApp} color="blue">
+            <DownloadOutline class="w-5 h-5 mr-1" /><span>ติดตั้ง</span>
+        </Button>
+    </div>
 </div>
 
 {@render children()}

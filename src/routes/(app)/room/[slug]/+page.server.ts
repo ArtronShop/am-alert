@@ -1,6 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getNotificationsByRoomId, getRoomById } from '../../../../action';
+import 'dotenv/config';
 
 export const load: PageServerLoad = async ({ params }) => {
     const roomId = +params.slug;
@@ -18,5 +19,6 @@ export const load: PageServerLoad = async ({ params }) => {
     return {
         roomInfo,
         notificationList,
+        publicVapidKey: process.env.PUBLIC_VAPID_KEY!
     };
 };

@@ -4,7 +4,16 @@ interface UserInfoProps {
     email: string;
 }
 
+interface RoomJoinListItemProps {
+    roomId: number;
+    subscriptionId: number | null;
+}
+
+type RoomJoinListProps = RoomJoinListItemProps[];
+
 export type {
-    UserInfoProps
+    UserInfoProps,
+    RoomJoinListItemProps,
+    RoomJoinListProps,
 };
 
