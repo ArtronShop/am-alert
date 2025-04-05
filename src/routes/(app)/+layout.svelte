@@ -81,10 +81,10 @@
         <Dropdown placement="bottom" triggeredBy="#avatar-menu" >
             {#if userInfo}
                 {#if currentUrl.endsWith("/")}
-                <DropdownItem href="/create-room">สร้างห้องแจ้งเตือนใหม่</DropdownItem>
+                    <DropdownItem href="/create-room">สร้างห้องแจ้งเตือนใหม่</DropdownItem>
                 {/if}
                 {#if currentUrl.indexOf("/room/") >= 0}
-                <DropdownItem href={currentUrl + "/edit"}>แก้ไขข้อมูลห้อง</DropdownItem>
+                    <DropdownItem href={currentUrl + "/edit"}>แก้ไขข้อมูลห้อง</DropdownItem>
                 {/if}
                 <DropdownItem>สำหรับนักพัฒนา</DropdownItem>
                 <DropdownDivider />
