@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray, desc } from 'drizzle-orm';
 import { usersTable, roomsTable, subscriptionTable, notificationTable } from './db/schema';
 
 const db = drizzle(process.env.DATABASE_URL!);
@@ -105,6 +105,12 @@ export async function getNotificationsByRoomId(roomId: number) {
     const rows = await db.select().from(notificationTable).where(eq(notificationTable.roomId, roomId));
 
     return rows;
+}
+
+export async function getLastNotificationsByRoomId(roomId: number) {
+    const rows = await db.select().from(notificationTable).where(eq(notificationTable.roomId, roomId)).orderBy(desc(notificationTable.createAt)).limit(1);
+
+    return rows?.[0] || null;
 }
 
 export async function deleteNotification(id: number) {

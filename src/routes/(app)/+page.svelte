@@ -6,6 +6,7 @@
         Button,
         Input,
         FooterCopyright,
+        Badge,
     } from "flowbite-svelte";
 
     import {
@@ -16,6 +17,7 @@
     import { goto } from '$app/navigation';
     import { onMount } from 'svelte';
     import type { RoomJoinListProps } from "../../types";
+    import { formatFacebookTimeTH } from "$lib/formatFacebookTimeTH";
 
     let { data }: PageProps = $props();
     const { userInfo, roomList } = data;
@@ -48,13 +50,7 @@
         // Fetch room info
         const res = await fetch("/api/rooms?ids=" + roomJoinListId.join(","));
         if (res.ok) {
-            const roomJoinListLocalInfo: {
-                id: number;
-                name: string;
-                cover: string | null;
-                owner: number;
-                token: string | null;
-            }[] = await res.json();
+            const roomJoinListLocalInfo: any[] = await res.json();
             
             roomJoinList = (roomJoinList || []).concat(roomJoinListLocalInfo);
         }
@@ -72,9 +68,14 @@
                 href={`/room/${item.id}`}
             >
                 <Avatar src={item.cover || ""} size="md" dot={(item.owner === userInfo?.id && ({ placement: 'bottom-right', color: 'green' })) || undefined} />
-                <div class="flex flex-col ml-3">
-                    <p class="text-lg text-gray-600">{item.name}</p>
-                    <p class="text-sm text-gray-400">sdsdsd</p>
+                <div class="flex flex-col ml-3 grow">
+                    <div class="flex flex-row justify-between items-center">
+                        <p class="text-lg text-gray-600">{item.name}</p>
+                        {#if item?.lastNotification?.createAt}
+                            <Badge color="dark">{formatFacebookTimeTH(new Date(item?.lastNotification?.createAt))}</Badge>
+                        {/if}
+                    </div>
+                    <p class="text-sm text-gray-400">{item?.lastNotification?.message || ""}</p>
                 </div>
             </ListgroupItem>
         {/each}
@@ -92,5 +93,5 @@
     </div>
 
     <hr class="my-3 border-gray-300" />
-    <FooterCopyright href="/" by="ArtronShop CO.,LTD." />
+    <FooterCopyright href="https://www.artronshop.co.th" target="_blank" by="ArtronShop CO.,LTD." />
 </div>
