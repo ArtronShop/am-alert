@@ -1,4 +1,4 @@
-const CACHE_NAME = 'static-cache-V2.9.0';
+const CACHE_NAME = 'static-cache-Vxx.xx.xx';
 
 const FILES_TO_CACHE = [
     "/",
@@ -50,4 +50,29 @@ self.addEventListener('fetch', (evt) => {
                 });
             })
     );
+});
+
+let last_notify_see_more = null;
+
+self.addEventListener("push", e => {
+  const data = e.data.json();
+  console.log("Push Recieved with ", e.data);
+
+  const { message, image, url } = data;
+
+  self.registration.showNotification(message, {
+    icon: image || "/logo/icon-256x256.png",
+  });
+
+  last_notify_see_more = url;
+});
+
+self.addEventListener('notificationclick', function (event) {
+  event.notification.close(); // Android needs explicit close.
+
+  if (!last_notify_see_more) {
+    return;
+  }
+
+  clients.openWindow(last_notify_see_more);
 });
