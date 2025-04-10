@@ -1,55 +1,42 @@
 import { json } from '@sveltejs/kit';
 import type { RequestEvent, RequestHandler } from './$types';
-import { createNotification, getRoomById, getSubscriptionByRoomId  } from '../../../../action';
-import type { roomsTable } from '../../../../db/schema';
+import { createNotification, getRoomById, getSubscriptionByRoomId  } from '../../../action';
+import type { roomsTable } from '../../../db/schema';
 import PushNotifications from 'node-pushnotifications';
+import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 
-const tokenValidate = (roomToken: string, authorization: string) => {
+const tokenDecode = (authorization: string) => {
     if (!authorization?.startsWith("Bearer ")) {
-        return false;
+        return null;
     }
 
     const authToken = authorization?.replace("Bearer ", "");
     
-    return authToken === roomToken;
-}
-
-interface RequestEventWithRoomInfo extends RequestEvent {
-    roomInfo: typeof roomsTable.$inferSelect;
-}
-
-interface RequestHandlerWithRoomInfo {
-    (event: RequestEventWithRoomInfo): Promise<Response> | Response;
-}
-
-const withAuth = (next: RequestHandlerWithRoomInfo) => async (event: RequestEvent) => {
-    const { request, params} = event;
-    
-    const roomId = +params.slug;
-
-    const roomInfo = await getRoomById(roomId);
-    if (!roomInfo) {
-        return json({ error: "room id invalid" }, { status: 404 });
+    if (!jwt.verify(authToken, process.env.API_JWT_SECRET!)) {
+        return null;
     }
 
-    const authorization = request.headers.get("authorization") || "";
-    if (!tokenValidate(roomInfo?.token || "", authorization)) {
-        return json({ error: "invalid token" }, { status: 401 });
-    }
-
-    return next(({ ...event, roomInfo }) as RequestEventWithRoomInfo);
-};
-
-export const GET: RequestHandler = withAuth(async ({ roomInfo }) => {
-	return json(roomInfo);
-});
+    return jwt.decode(authToken) as any;
+}
 
 interface AssetsProps {
     image?: string;
 }
 
-export const POST: RequestHandler = withAuth(async ({ request, roomInfo }) => {
+export const POST: RequestHandler = async ({ request }) => {
+    const authorization = request.headers.get("authorization") || "";
+    const authInfo: ({ roomId: number, owner: string } | null) = tokenDecode(authorization);
+    if (!authInfo) {
+        return json({ error: "invalid token" }, { status: 401 });
+    }
+    const { roomId } = authInfo;
+
+    const roomInfo = await getRoomById(roomId);
+    if (!roomInfo) {
+        return json({ error: "room id invalid" }, { status: 404 });
+    }
+    
     const { message, image }: { message: string; image?: string } = await request.json();
     if (!message) {
         return json({ error: "invalid 'message' object" }, { status: 401 });
@@ -61,13 +48,13 @@ export const POST: RequestHandler = withAuth(async ({ request, roomInfo }) => {
     }
 
     const notificationId = await createNotification({
-        roomId: roomInfo.id, 
+        roomId, 
         message, 
         assets
     });
 
     // Send push notification to user
-    const subscription = (await getSubscriptionByRoomId(roomInfo.id)).map(a => a.subscription) as PushNotifications.RegistrationId[];
+    const subscription = (await getSubscriptionByRoomId(roomId)).map(a => a.subscription) as PushNotifications.RegistrationId[];
 
     const push = new PushNotifications({
         web: {
@@ -87,12 +74,12 @@ export const POST: RequestHandler = withAuth(async ({ request, roomInfo }) => {
     push.send(subscription, {
         message,
         image: image || (roomInfo.cover && (process.env.PUBLIC_URL + roomInfo.cover)) || null,
-        url: `${process.env.PUBLIC_URL}/room/${roomInfo.id}`,
+        url: `${process.env.PUBLIC_URL}/room/${roomId}`,
     } as any).then(result => {
         console.log("ok", result, result?.[0]?.message);
     }).catch(e => {
         console.error(e);
     });
 
-	return json({ ok: true, notificationId });
-});
+	return json({ ok: true, roomId, notificationId });
+};
