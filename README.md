@@ -1,38 +1,33 @@
-# sv
+# 🚨 Am Alert
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+**Am Alert** is a notification service for IoT applications that allows sending alerts from various devices to users quickly and conveniently.
 
-## Creating a project
+---
 
-If you're seeing this, you've probably already done this step. Congrats!
+## 🧰 Tech Stack
 
+- [SvelteKit](https://kit.svelte.dev/) – Frontend Framework
+- [Drizzle ORM](https://orm.drizzle.team/) – Type-safe ORM for database
+
+---
+
+## 🛠️ How to Run Locally
+
+1. Create a `.env` file or set up the necessary environment variables.
+2. Install the dependencies by running:
 ```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+npm install
 ```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
+3. Initialize the Drizzle ORM:
+```bash
+npx drizzle-kit generate
+```
+4. Run the project in development mode:
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
+## 🚀 How to Run in Production
 
-## Building
+Follow the SvelteKit – Running in Production guide, and choose the appropriate adapter for your server (such as Node.js, Vercel, Cloudflare, etc.).
 
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+> 💡 If you have suggestions or encounter issues, feel free to create an Issue on the GitHub repository!
