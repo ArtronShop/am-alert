@@ -72,11 +72,11 @@ export const POST: RequestHandler = async ({ request }) => {
     });
 
     push.send(subscription, {
-        message,
+        message: `${roomInfo.name}: ${message}`,
         image: image || (roomInfo.cover && (process.env.PUBLIC_URL + roomInfo.cover)) || null,
         url: `${process.env.PUBLIC_URL}/room/${roomId}`,
     } as any).then(result => {
-        console.log("ok", result, result?.[0]?.message);
+        // console.log("ok", result, result?.[0]?.message);
     }).catch(e => {
         console.error(e);
     });
