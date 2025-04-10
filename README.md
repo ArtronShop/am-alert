@@ -2,14 +2,10 @@
 
 **Am Alert** is a notification service for IoT applications that allows sending alerts from various devices to users quickly and conveniently.
 
----
-
 ## 🧰 Tech Stack
 
 - [SvelteKit](https://kit.svelte.dev/) – Frontend Framework
 - [Drizzle ORM](https://orm.drizzle.team/) – Type-safe ORM for database
-
----
 
 ## 🛠️ How to Run Locally
 
