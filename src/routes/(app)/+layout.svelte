@@ -59,6 +59,9 @@
 
         deferredInstallPrompt = null;
     }
+
+    let closeDialog = $state(false);
+    const handleClickCloseDialog = () => closeDialog = true;
 </script>
 
 <div class="m-auto w-80">
@@ -73,7 +76,10 @@
             </Button>
         {/if}
         <NavBrand href="/">
-            <img src="" class="me-3 h-6 sm:h-9" alt="Flowbite Logo" />
+            <img src="/Am-Alert-Logo.svg" class="me-3 h-6 sm:h-9" alt="Flowbite Logo" />
+            {#if currentUrl.endsWith("/")}
+                <span class="self-center whitespace-nowrap text-xl font-semibold text-gray-700">Am Alert</span>
+            {/if}
         </NavBrand>
         <div class="flex items-center md:order-2">
             <Avatar id="avatar-menu" src="" />
@@ -96,13 +102,18 @@
     </Navbar>
 </div>
 
+{#if !closeDialog}
 <div class="fixed bottom-3 w-80 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-2xl p-3 z-50">
     <p class="text-sm mb-1">เพื่อประสบการณ์ที่ดีขึ้น ขอแนะนำให้ติดตั้งแอพนี้ลงในอุปกรณ์ของคุณ</p>
     <div class="flex justify-end">
+        <Button size="sm" on:click={handleClickCloseDialog} color="dark" outline class="border-0 mr-1">
+            <span>ปิด</span>
+        </Button>
         <Button size="sm" on:click={handleClickInstallApp} color="blue">
             <DownloadOutline class="w-5 h-5 mr-1" /><span>ติดตั้ง</span>
         </Button>
     </div>
 </div>
+{/if}
 
 {@render children()}
