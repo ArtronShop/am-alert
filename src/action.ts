@@ -39,6 +39,12 @@ export async function createRoom(value: typeof roomsTable.$inferInsert) {
     return newRow[0].id;
 }
 
+export async function updateRoomToken(roomId: number, token: string) {
+    await db.update(roomsTable).set({ token }).where(eq(roomsTable.id, roomId));
+    
+    return true;
+}
+
 export async function getRoomById(roomId: number) {
     const rows = await db.select().from(roomsTable).where(eq(roomsTable.id, roomId));
 
@@ -48,7 +54,7 @@ export async function getRoomById(roomId: number) {
 export async function getRoomsById(roomId: number[]) {
     const rows = await db.select().from(roomsTable).where(inArray(roomsTable.id, roomId));
 
-    return rows?.[0] || null;
+    return rows;
 }
 
 export async function getRoomsByOwner(owner: number) {
@@ -74,6 +80,12 @@ export async function createSubscription(value: typeof subscriptionTable.$inferI
     const newRow = await db.insert(subscriptionTable).values(value).returning({ id: subscriptionTable.id });
     
     return newRow[0].id;
+}
+
+export async function getSubscriptionByRoomId(roomId: number) {
+    const rows = await db.select().from(subscriptionTable).where(eq(subscriptionTable.roomId, roomId));
+
+    return rows;
 }
 
 export async function deleteSubscription(id: number) {
