@@ -2,8 +2,10 @@ import type { Actions, PageServerLoad } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
 import fs from "fs/promises";
 import path from "path";
-import { createRoom } from '../../../action';
+import crypto from "crypto";
+import { createRoom, updateRoomToken } from '../../../action';
 import jwt from 'jsonwebtoken';
+import 'dotenv/config';
 
 export const load: PageServerLoad = async ({ url, locals }) => {
     const { userInfo } = locals;
@@ -53,24 +55,30 @@ export const actions = {
                 return fail(400, { incorrect: "Invalid file type. Only .gif, .png, .jpg files are allowed." });
             }
 
+            // ✅ Generate random filename
+            const randomName = crypto.randomBytes(16).toString("hex");
+            const fileName = `${randomName}${fileExtension}`;
+            const filePath = path.join("static/uploads", fileName);
+
             // Save file to disk
             const arrayBuffer = await coverFile.arrayBuffer();
             const buffer = Buffer.from(arrayBuffer);
-            const filePath = path.join("static/uploads", coverFile.name);
 
             await fs.writeFile(filePath, buffer);
 
-            coverPath = "/uploads/" + coverFile.name;
+            coverPath = "/uploads/" + fileName;
         }
-
-        const token = jwt.sign({ owner: userInfo.email }, "RoomSecretKey");
 
         const roomId = await createRoom({ 
             name,
             cover: coverPath, 
-            token,
+            token: null,
             owner: userInfo.id
         });
+
+        const token = jwt.sign({ roomId, owner: userInfo.email }, process.env.API_JWT_SECRET!);
+
+        await updateRoomToken(roomId, token);
 
         redirect(302, "/room/" + roomId);
 
