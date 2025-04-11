@@ -1,9 +1,10 @@
 <script lang="ts">
     import {
-    Alert,
+        Alert,
         Avatar,
         Button,
         Input,
+        Popover,
         Tooltip,
     } from "flowbite-svelte";
 
@@ -189,7 +190,22 @@
         subscriptionId = null;
     }
 
-    const handleClickDownloadNotificationLog = () => {};
+    const handleClickDownloadNotificationLog = () => {
+        // Convert rows to CSV string
+        const csvContent = "Datetime,Message\n" + notificationList.map(a => `${(new Date(a.createAt || 0)).toLocaleString()},${a.message}`).join("\n");
+
+        // Create a Blob from the CSV string
+        const universalBOM = "\uFEFF";
+        const blob = new Blob([universalBOM + csvContent], { type: "text/csv;charset=utf-8;" });
+
+        // Create a temporary <a> tag to trigger download
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.setAttribute("href", url);
+        a.setAttribute("download", "data.csv");
+        a.click();
+    }
 
     const handleClickCopyToken = async () => {
         try {
@@ -290,12 +306,29 @@
             <Button
                 class="border-none p-2.5"
                 size="sm"
-                on:click={handleClickDownloadNotificationLog}
+                id="delete-room"
                 color="red"
                 outline
             >
                 <TrashBinSolid class="w-5 h-5" /> ลบห้องนี้
             </Button>
+            <Popover
+                class="w-64 text-md text-black" 
+                triggeredBy="#delete-room" 
+                trigger="click"
+            >
+                <p class="mb-2">ประวัติแจ้งเตือนจะถูกลบ และไม่สามารถกู้คืนได้อีก</p>
+                <form method="POST" action="?/delete">
+                    <Button
+                        class="border-none p-2.5 w-full"
+                        size="sm"
+                        color="red"
+                        type="submit"
+                    >
+                        <TrashBinSolid class="w-5 h-5" /> ยืนยันการลบ
+                    </Button>
+                </form>
+            </Popover>
         </div>
     {/if}
 </div>
