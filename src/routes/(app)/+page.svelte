@@ -81,10 +81,10 @@
         {/each}
     </Listgroup>
 
-    <p class="text-sm text-gray-500 mb-1">เพิ่มห้อง</p>
+    <p class="text-sm text-gray-500 mb-1">เข้าร่วมห้อง</p>
     <div class="flex flex-row mb-6">
         <Input
-            type="text"
+            type="number"
             id="add-room-id"
             placeholder="หมายเลขห้อง"
             class="grid-rows-1 mr-3"

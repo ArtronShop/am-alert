@@ -9,9 +9,9 @@ export const load: PageServerLoad = async ({ params }) => {
     }
 
     const roomInfo = await getRoomById(roomId);
-    /* if (!roomInfo) {
+    if (!roomInfo) {
         throw redirect(302, "/");
-    } */
+    }
 
     const notificationList = await getNotificationsByRoomId(roomId);
 
