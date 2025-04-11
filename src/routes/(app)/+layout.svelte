@@ -51,8 +51,7 @@
         }
     }
 
-    let closeDialog = $state(false);
-    const handleClickCloseDialog = () => closeDialog = true;
+    const handleClickCloseDialog = () => installAppDialogShow = false;
 </script>
 
 <svelte:window
@@ -102,7 +101,7 @@
     </Navbar>
 </div>
 
-{#if !closeDialog && installAppDialogShow}
+{#if installAppDialogShow}
 <div class="fixed bottom-3 w-80 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-2xl p-3 z-50">
     <p class="text-sm mb-1">เพื่อประสบการณ์ที่ดีขึ้น ขอแนะนำให้ติดตั้งแอพนี้ลงในอุปกรณ์ของคุณ</p>
     <div class="flex justify-end">

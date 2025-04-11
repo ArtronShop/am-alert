@@ -1,8 +1,8 @@
 import type { Actions, PageServerLoad } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
-import fs from "fs/promises";
-import path from "path";
-import crypto from "crypto";
+import fs from "node:fs/promises";
+import path from "node:path";
+import crypto from "node:crypto";
 import { createRoom, updateRoomToken } from '../../../action';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
