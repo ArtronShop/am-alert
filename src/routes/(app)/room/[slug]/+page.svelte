@@ -4,6 +4,7 @@
         Avatar,
         Button,
         Input,
+        Modal,
         Popover,
         Tooltip,
     } from "flowbite-svelte";
@@ -12,14 +13,16 @@
         BellActiveOutline,
         DownloadSolid,
         FileCopySolid,
-        FloppyDiskSolid,
         TrashBinSolid,
         CloseOutline,
         InfoCircleSolid,
+        ShareAllSolid,
     } from "flowbite-svelte-icons";
 
     import type { PageProps } from "./$types";
     import { onMount } from 'svelte';
+    import QRCode from 'qrcode';
+    
     import type { RoomJoinListProps } from "../../../../types";
 
     let { data }: PageProps = $props();
@@ -190,6 +193,15 @@
         subscriptionId = null;
     }
 
+    let openShareModal = $state(false);
+    let qrDataUrl = $state("");
+
+    const handleClickShare = async () => {
+        qrDataUrl = await QRCode.toDataURL(window.location.href);
+
+        openShareModal = true;
+    }
+
     const handleClickDownloadNotificationLog = () => {
         // Convert rows to CSV string
         const csvContent = "Datetime,Message\n" + notificationList.map(a => `${(new Date(a.createAt || 0)).toLocaleString()},${a.message}`).join("\n");
@@ -215,6 +227,27 @@
 			alert("Copy failed");
 		}
     }
+
+    const handleClickCopyURL = async () => {
+        try {
+			await navigator.clipboard.writeText(window.location.href || "");
+		} catch (err) {
+			console.error("Failed to copy: ", err);
+			alert("Copy failed");
+		}
+    }
+
+    const handleClickShareExternal = async () => {
+        try {
+            await navigator.share({
+                title: `การแจ้งเตือนของ ${roomInfo?.name || ""}`,
+                text: "รับและดูประวัติการแจ้งเตือน",
+                url: window.location.href || "",
+            });
+        } catch (err) {
+            console.error(`Error: ${err}`);
+        }
+    }
 </script>
 
 <title>การแจ้งเตือนของ {roomInfo?.name || ""} - Am Alert</title>
@@ -232,15 +265,20 @@
                     <span>เบราว์เซอร์ของคุณไม่รองรับ Push Notification โปรดเปิดเว็บไซต์นี้ใน Google Chrome (Android/Windows) หรือ Safari (iOS) เวอร์ชั่นล่าสุด</span>
                 </Alert>
             {/if}
-            {#if !subscriptionId}
-            <Button class="mx-auto" size="sm" on:click={handleClickSubscribe}>
-                <BellActiveOutline class="w-5 h-5 mr-2" /> รับแจ้งเตือน
-            </Button>
-            {:else}
-            <Button class="mx-auto" size="sm" on:click={handleClickUnsubscribe} color="red">
-                <CloseOutline class="w-5 h-5 mr-2" /> เลิกรับแจ้งเตือน
-            </Button>
-            {/if}
+            <div class="flex items-center justify-center">
+                {#if !subscriptionId}
+                <Button class="mx-auto" size="sm" on:click={handleClickSubscribe}>
+                    <BellActiveOutline class="w-5 h-5 mr-2" /> รับแจ้งเตือน
+                </Button>
+                {:else}
+                <Button class="mx-auto" size="sm" on:click={handleClickUnsubscribe} color="red">
+                    <CloseOutline class="w-5 h-5 mr-2" /> เลิกรับแจ้งเตือน
+                </Button>
+                {/if}
+                <Button class="mx-auto border-0 ml-2 p-2" size="sm" on:click={handleClickShare} color="blue" outline>
+                    <ShareAllSolid class="w-5 h-5" />
+                </Button>
+            </div>
         {/if}
     </div>
     <p class="text-sm text-gray-500 mb-1">ประวัติแจ้งเตือน</p>
@@ -332,3 +370,39 @@
         </div>
     {/if}
 </div>
+
+<Modal title={`ห้องหมายเลข : ${roomInfo.id}`} bind:open={openShareModal} size="xs" autoclose>
+    <div class="flex flex-col items-center mb-3">
+        <img class="m-auto border-2 border-gray-500 rounded-xl mb-3" src={qrDataUrl} alt="qr code" width="200" />
+        <Button
+            class="m-auto p-2.5"
+            size="sm"
+            href={qrDataUrl}
+            download={`${roomInfo.name}.png`}
+        >
+            <DownloadSolid class="w-5 h-5 mr-2" /> ดาวน์โหลด
+        </Button>
+    </div>
+    <div class="flex">
+        <Input class="grow mr-2" value={window.location.href} readonly />
+        <Button
+            class="p-2.5"
+            size="sm"
+            on:click={handleClickCopyURL}
+            id="copy-url"
+        >
+            <FileCopySolid class="w-5 h-5" />
+        </Button>
+        <Tooltip trigger="click" triggeredBy="#copy-url">Copy !</Tooltip>
+        {#if Boolean(navigator.share)}
+            <Button
+                class="border-none p-2.5 ml-2"
+                size="sm"
+                on:click={handleClickShareExternal}
+                color="blue"
+            >
+                <ShareAllSolid class="w-5 h-5" />
+            </Button>
+        {/if}
+    </div>
+</Modal>
