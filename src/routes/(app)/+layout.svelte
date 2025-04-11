@@ -30,39 +30,39 @@
     const currentUrl = $derived(page.url.toString());
 
     let installAppDialogShow = $state(false);
-    let deferredInstallPrompt = $state(null);
+    let installPromptEvent: any = $state(null);
 
     onMount(() => {
-        window.addEventListener("beforeinstallprompt", evt => {
-            // console.log("beforeinstallprompt event", evt);
-            deferredInstallPrompt = evt;
+        window.addEventListener("appinstalled", e => {
+            console.log("App installed.", e);
 
-            installAppDialogShow = true;
-        });
-
-        window.addEventListener("appinstalled", evt => {
-            console.log('App installed.', evt);
             installAppDialogShow = false;
         });
     });
 
     const handleClickInstallApp = async () => {
-        deferredInstallPrompt.prompt();
-
-        const { outcome } = await deferredInstallPrompt.userChoice;
+        installPromptEvent.prompt();
+        const { outcome } = await installPromptEvent.userChoice;
         if (outcome === 'accepted') {
-            console.log('User accepted the A2HS prompt', choice);
+            console.log('User accepted the A2HS prompt', outcome);
             installAppDialogShow = false;
         } else {
-            console.log('User dismissed the A2HS prompt', choice);
+            console.log('User dismissed the A2HS prompt', outcome);
         }
-
-        deferredInstallPrompt = null;
     }
 
     let closeDialog = $state(false);
     const handleClickCloseDialog = () => closeDialog = true;
 </script>
+
+<svelte:window
+    onbeforeinstallprompt={(e: Event) => {
+        e.preventDefault(); // Prevent default mini-infobar
+
+        installPromptEvent = e;
+        installAppDialogShow = true;
+    }}
+/>
 
 <div class="m-auto w-80">
     <Navbar class="mb-5 rounded-b-lg">
@@ -102,7 +102,7 @@
     </Navbar>
 </div>
 
-{#if !closeDialog}
+{#if !closeDialog && installAppDialogShow}
 <div class="fixed bottom-3 w-80 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-2xl p-3 z-50">
     <p class="text-sm mb-1">เพื่อประสบการณ์ที่ดีขึ้น ขอแนะนำให้ติดตั้งแอพนี้ลงในอุปกรณ์ของคุณ</p>
     <div class="flex justify-end">
