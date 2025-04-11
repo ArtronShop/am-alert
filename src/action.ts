@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { eq, inArray, desc } from 'drizzle-orm';
+import { eq, inArray, desc, and } from 'drizzle-orm';
 import { usersTable, roomsTable, subscriptionTable, notificationTable } from './db/schema';
 
 const db = drizzle(process.env.DATABASE_URL!);
@@ -75,6 +75,12 @@ export async function deleteRoom(roomId: number) {
     return true;
 }
 
+export async function deleteRoomByIdAndOwner(roomId: number, owner: number) {
+    await db.delete(roomsTable).where(and(eq(roomsTable.id, roomId), eq(roomsTable.owner, owner)));
+
+    return true;
+}
+
 // Subscription
 export async function createSubscription(value: typeof subscriptionTable.$inferInsert) {
     const newRow = await db.insert(subscriptionTable).values(value).returning({ id: subscriptionTable.id });
@@ -111,6 +117,12 @@ export async function getLastNotificationsByRoomId(roomId: number) {
     const rows = await db.select().from(notificationTable).where(eq(notificationTable.roomId, roomId)).orderBy(desc(notificationTable.createAt)).limit(1);
 
     return rows?.[0] || null;
+}
+
+export async function deleteNotificationByRoomId(roomId: number) {
+    await db.delete(notificationTable).where(eq(notificationTable.roomId, roomId));
+
+    return true;
 }
 
 export async function deleteNotification(id: number) {
