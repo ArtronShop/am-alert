@@ -7,7 +7,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (userInfo) {
 		roomList = await Promise.all((await getRoomsByOwner(userInfo?.id)).map(async (roomInfo) => ({ ...roomInfo, lastNotification: await getLastNotificationsByRoomId(roomInfo.id) })));
 	}
-	console.log(roomList);
+	// console.log(roomList);
     return {
         userInfo,
 		roomList,
