@@ -10,13 +10,30 @@
 ## 🛠️ How to Run Locally
 
 1. Create a `.env` file or set up the necessary environment variables.
+```bash
+PUBLIC_URL=<Site Domain>
+
+# Database
+DATABASE_URL=postgres://<username>:<password>@<host>:5432/<database>
+
+# Login
+JWT_SECRET=<Login JWT Secret>
+
+# API
+API_JWT_SECRET=<API JWT Secret>
+
+# Subscription
+PUBLIC_VAPID_KEY=
+PRIVATE_VAPID_KEY=
+ADMIN_EMAIL=<Your email>
+```
 2. Install the dependencies by running:
 ```bash
 npm install
 ```
-3. Initialize the Drizzle ORM:
+3. Initialize PostgreSQL database with Drizzle ORM :
 ```bash
-npx drizzle-kit generate
+npx drizzle-kit push
 ```
 4. Run the project in development mode:
 ```bash
