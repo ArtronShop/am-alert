@@ -15,7 +15,7 @@
 <div class="m-auto max-w-2xl mb-10">
     <div class="bg-white rounded-xl p-4 mb-2">
         <h1 class="text-2xl mb-4">คู่มือนักพัฒนา</h1>
-        <p class="text-sm text-gray-700 mb-4">การส่งข้อความเข้าห้องเพื่อแจ้งเตือนไปยังกลุ่มผู้รับแจ้งเตือนของห้อง ทำผ่าน REST API โดยส่ง Method POST ไปที่ <Badge color="dark">/api/push</Badge> มีรายละเอียดดังนี้</p>
+        <div class="text-sm text-gray-700 mb-4">การส่งข้อความเข้าห้องเพื่อแจ้งเตือนไปยังกลุ่มผู้รับแจ้งเตือนของห้อง ทำผ่าน REST API โดยส่ง Method POST ไปที่ <Badge color="dark">/api/push</Badge> มีรายละเอียดดังนี้</div>
         
         <h2 class="text-md mb-2">Request Header</h2>
         <Table striped={true} class="mb-4">
