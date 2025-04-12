@@ -7,7 +7,10 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
-		"start": "node custom-server",
+		"start": "node -r dotenv/config custom-server",
+		"production": "pm2 start npm --name \"Am-Alert\" -- start && pm2 startup && pm2 save",
+		"update": "git pull",
+		"stop": "pm2 stop \"Am-Alert\" && pm2 delete \"Am-Alert\"",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
