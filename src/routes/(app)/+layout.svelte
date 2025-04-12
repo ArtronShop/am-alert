@@ -75,7 +75,7 @@
             </Button>
         {/if}
         <NavBrand href="/">
-            <img src="/Am-Alert-Logo.svg" class="me-3 h-6 sm:h-9" alt="Flowbite Logo" />
+            <img src="/Am-Alert-Logo.svg" class="me-3 h-9" alt="Flowbite Logo" />
             {#if currentUrl.endsWith("/")}
                 <span class="self-center whitespace-nowrap text-xl font-semibold text-gray-700">Am Alert</span>
             {/if}
@@ -85,13 +85,8 @@
         </div>
         <Dropdown placement="bottom" triggeredBy="#avatar-menu" >
             {#if userInfo}
-                {#if currentUrl.endsWith("/")}
-                    <DropdownItem href="/create-room">สร้างห้องแจ้งเตือนใหม่</DropdownItem>
-                {/if}
-                {#if currentUrl.indexOf("/room/") >= 0}
-                    <DropdownItem href={currentUrl + "/edit"}>แก้ไขข้อมูลห้อง</DropdownItem>
-                {/if}
-                <DropdownItem>สำหรับนักพัฒนา</DropdownItem>
+                <DropdownItem href="/create-room">สร้างห้องแจ้งเตือนใหม่</DropdownItem>
+                <DropdownItem href="/docs">สำหรับนักพัฒนา</DropdownItem>
                 <DropdownDivider />
                 <DropdownItem href={"/logout?go=" + encodeURIComponent(currentUrl)}>ออกจากระบบ</DropdownItem>
             {:else}
